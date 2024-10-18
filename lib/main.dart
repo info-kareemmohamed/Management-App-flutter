@@ -14,21 +14,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      // Base size for scaling (depends on the design)
-      minTextAdapt: true,
-      // Adapts text size based on device
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Task Management',
-          theme: ThemeData(
-            useMaterial3: true,
-          ),
-          home: const TaskListScreen(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        Size designSize;
+        // Check if the device width is greater than a certain value to determine platform
+        if (constraints.maxWidth > 600) {
+          // Desktop design size
+          designSize = const Size(1440, 1024);
+        } else {
+          // Mobile design size
+          designSize = const Size(375, 812);
+        }
+
+        return ScreenUtilInit(
+          designSize: designSize,
+          minTextAdapt: true,
+          builder: (context, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Task Management',
+              theme: ThemeData(
+                useMaterial3: true,
+                scaffoldBackgroundColor: const Color(0xffFFFFFF),
+              ),
+              home: const TaskListScreen(),
+            );
+          },
         );
       },
     );
   }
+
 }

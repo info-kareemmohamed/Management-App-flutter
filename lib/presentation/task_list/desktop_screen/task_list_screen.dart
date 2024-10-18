@@ -25,8 +25,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
     return BlocProvider(
       create: (context) => getIt<TaskBloc>()..add(GetTasksEvent()),
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(),
+        backgroundColor: AppColors.white,
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          backgroundColor: AppColors.white,
+        ),
         body: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
             if (state is TaskLoading) {
@@ -116,16 +119,18 @@ class _TaskListScreenState extends State<TaskListScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: UpsertTaskForm(
+        return AlertDialog(
+          backgroundColor: AppColors.cardColor,
+          surfaceTintColor: AppColors.cardColor,
+          content: UpsertTaskForm(
             formKey: formKey,
             titleController: titleController,
             dueDateController: dueDateController,
             onSaveTask: (String title, DateTime dateTime) {
-              onSaveTask(title, dateTime);
-              Navigator.pop(context);
+              if (formKey.currentState?.validate() ?? false) {
+                onSaveTask(title, dateTime);
+                Navigator.pop(context);
+              }
             },
           ),
         );
@@ -133,10 +138,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 
+
   Widget _buildTaskList(BuildContext context, List<TaskModel> tasks) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 4,
         crossAxisSpacing: 10.w,
         mainAxisSpacing: 10.h,
         childAspectRatio: 1.5,
