@@ -1,6 +1,6 @@
 # Ropulva Task Management App flutter 📝
 
-Ropulva ToDo is a versatile Flutter application for managing your tasks. It seamlessly works both offline and online, keeping you organized wherever you go.
+Ropulva Task Management App is a versatile Flutter application for managing your tasks. It seamlessly works both offline and online, keeping you organized wherever you go.
 
 
 
