@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "922039274940",
+    "project_id": "task-management-app-84623",
+    "storage_bucket": "task-management-app-84623.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922039274940:android:f7d17e336f4308ba24afb9",
+        "android_client_info": {
+          "package_name": "com.example.ropulva_flutter_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVdpKW7sofirvNgzxDTuzmdhotvCue8uw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
