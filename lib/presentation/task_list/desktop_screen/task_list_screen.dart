@@ -5,11 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:ropulva_flutter_task/presentation/task_list/mobile_screen/task_card.dart';
 import '../../../di/setup_locator.dart';
 import '../../../domain/model/task_model.dart';
+
 import '../../app_colors.dart';
 import '../../bloc/task_bloc.dart';
 import '../../bloc/task_event.dart';
 import '../../bloc/task_state.dart';
 import '../../upsert_task/mobile_screen/upsert_task_form.dart';
+import '../../widgets/primary_button.dart';
 import '../mobile_screen/primary_chip.dart';
 
 class TaskListMobileScreen extends StatefulWidget {
@@ -25,10 +27,17 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
     return BlocProvider(
       create: (context) => getIt<TaskBloc>()..add(GetTasksEvent()),
       child: Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: AppColors.white,
+          backgroundColor: Colors.white,
+          title: Text(
+            'Good Morning',
+            style: TextStyle(
+              color: AppColors.black,
+              fontSize: 30.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
         body: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
@@ -41,39 +50,6 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
             } else if (state is TaskLoaded) {
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Good Morning',
-                        style: TextStyle(
-                          color: AppColors.black,
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 94),
-                        child: InkWell(
-                          onTap: (){
-                         _showUpsertTaskDialog(context, null,(String title, DateTime dateTime){
-                           BlocProvider.of<TaskBloc>(context)
-                               .add(AddTaskEvent(title, dateTime));
-                         });
-                          },
-                          child: Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: AppColors.green,
-                              ),
-                              child: const Icon(Icons.add,color: Colors.white,size: 47,)),
-                        ),
-                      )
-                    ],
-                  ),
-
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.h),
                     child: Row(
@@ -94,6 +70,19 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
                     ),
                   ),
                   Expanded(child: _buildTaskList(context, state.tasks)),
+                  Padding(
+                    padding: EdgeInsets.all(16.h),
+                    child: PrimaryButton(
+                      onPressed: () {
+                        _showUpsertTaskBottomSheet(context, null,
+                            (String title, DateTime dateTime) {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(AddTaskEvent(title, dateTime));
+                        });
+                      },
+                      text: 'Create Task',
+                    ),
+                  ),
                 ],
               );
             } else {
@@ -105,7 +94,7 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
     );
   }
 
-  void _showUpsertTaskDialog(BuildContext context, TaskModel? task,
+  void _showUpsertTaskBottomSheet(BuildContext context, TaskModel? task,
       Function(String title, DateTime dateTime) onSaveTask) {
     final titleController = TextEditingController();
     final dueDateController = TextEditingController();
@@ -116,21 +105,21 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
       dueDateController.text = DateFormat.yMMMd().add_jm().format(task.dueDate);
     }
 
-    showDialog(
+    showModalBottomSheet(
+      backgroundColor: AppColors.white,
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppColors.cardColor,
-          surfaceTintColor: AppColors.cardColor,
-          content: UpsertTaskForm(
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: UpsertTaskForm(
             formKey: formKey,
             titleController: titleController,
             dueDateController: dueDateController,
             onSaveTask: (String title, DateTime dateTime) {
-              if (formKey.currentState?.validate() ?? false) {
-                onSaveTask(title, dateTime);
-                Navigator.pop(context);
-              }
+              onSaveTask(title, dateTime);
+              Navigator.pop(context);
             },
           ),
         );
@@ -138,20 +127,13 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
     );
   }
 
-
   Widget _buildTaskList(BuildContext context, List<TaskModel> tasks) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 10.w,
-        mainAxisSpacing: 10.h,
-        childAspectRatio: 1.5,
-      ),
+    return ListView.builder(
       itemCount: tasks.length,
       itemBuilder: (context, index) {
         final task = tasks[index];
         return Padding(
-          padding: EdgeInsets.all(8.h),
+          padding: EdgeInsets.symmetric(vertical: 8.h),
           child: TaskCard(
             task: task,
             onDelete: () {
@@ -161,12 +143,10 @@ class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
               context.read<TaskBloc>().add(ChangeIsDoneEvent(task));
             },
             onTask: () {
-              _showUpsertTaskDialog(context, task,
+              _showUpsertTaskBottomSheet(context, task,
                   (String title, DateTime dateTime) {
-                final TaskModel newTask =
-                    TaskModel(id: task.id, title: title, dueDate: dateTime);
-                BlocProvider.of<TaskBloc>(context)
-                    .add(UpdateTaskEvent(newTask));
+                BlocProvider.of<TaskBloc>(context).add(UpdateTaskEvent(
+                    task.copyWith(title: title, dueDate: dateTime)));
               });
             },
           ),
