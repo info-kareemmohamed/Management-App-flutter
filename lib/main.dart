@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ropulva_flutter_task/TaskApp.dart';
-import 'package:ropulva_flutter_task/presentation/task_list/desktop_screen/task_list_screen.dart';
 import 'package:ropulva_flutter_task/presentation/task_list/mobile_screen/task_list_screen.dart';
+import 'package:ropulva_flutter_task/presentation/task_list/desktop_screen/task_list_screen.dart';
 
 
 void main() async {
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
                 scaffoldBackgroundColor: const Color(0xffFFFFFF),
               ),
-              home: Platform.isWindows?const TaskListScreen(): const TaskListMobileScreen(),
+              home: Platform.isWindows?const TaskListScreen(): const TaskListScreen(),
             );
           },
         );
