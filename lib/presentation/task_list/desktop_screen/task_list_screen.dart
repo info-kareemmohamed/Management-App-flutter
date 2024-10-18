@@ -12,14 +12,14 @@ import '../../bloc/task_state.dart';
 import '../../upsert_task/mobile_screen/upsert_task_form.dart';
 import '../mobile_screen/primary_chip.dart';
 
-class TaskListScreen extends StatefulWidget {
-  const TaskListScreen({super.key});
+class TaskListMobileScreen extends StatefulWidget {
+  const TaskListMobileScreen({super.key});
 
   @override
-  _TaskListScreenState createState() => _TaskListScreenState();
+  _TaskListMobileScreenState createState() => _TaskListMobileScreenState();
 }
 
-class _TaskListScreenState extends State<TaskListScreen> {
+class _TaskListMobileScreenState extends State<TaskListMobileScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
