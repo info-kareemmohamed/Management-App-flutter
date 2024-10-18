@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../domain/model/task_model.dart';
 import '../../domain/repository/task_repository.dart';
-import '../widgets/primary_chip.dart';
+import '../task_list/mobile_screen/primary_chip.dart';
 import 'task_event.dart';
 import 'task_state.dart';
 

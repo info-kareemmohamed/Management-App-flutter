@@ -1,6 +1,6 @@
 
 import '../../domain/model/task_model.dart';
-import '../widgets/primary_chip.dart';
+import '../task_list/mobile_screen/primary_chip.dart';
 
 abstract class TaskState {}
 
